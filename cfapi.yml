@@ -1,0 +1,45 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Get CF Catalog items
+    uri:
+      url: "https://{{ cf_address }}/api/service_templates?expand=resources&attributes=name"
+      method: GET
+      return_content: yes
+      user: admin
+      password: "{{ cf_passwrod }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+    register: cat_items
+  
+  - name:    
+    debug:
+      var: cat_items.json.resources
+
+- hosts: localhost
+  vars_prompt:
+    - name: "cat_item_number"
+      prompt: "Enter the catalog item number you wish to provision from the list above"
+      private: no
+    
+    - name: "vm_name"
+      prompt: "Enter the desired name of the instance"
+      private: no
+  tasks:
+  - name: Create service catalog item request
+    uri:
+      url: "https://{{ cf_address }}/api/service_catalogs/24000000000001/service_templates"
+      method: POST
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      headers:
+        Content-Type:  application/json
+      body_format: json
+      body:
+        action: order
+        resource: 
+          href: "https://{{ cf_address }}/api/service_templates/{{ cat_item_number }}"
+          option_1_vm_name: "{{ vm_name }}"
