@@ -3,7 +3,7 @@
   tasks:
   - name: Get CF Catalog items
     uri:
-      url: "https://{{ cf_address }}/api/service_templates?expand=resources&attributes=name"
+      url: "https://{{ cf_address }}/api/services?expand=resources&attributes=name"
       method: GET
       return_content: yes
       user: admin
@@ -21,16 +21,13 @@
 - hosts: localhost
   vars_prompt:
     - name: "cat_item_number"
-      prompt: "Enter the last two digits of the catalog item number you wish to provision from the list above"
+      prompt: "Enter the last two digits of the service item number you wish to retire"
       private: no
     
-    - name: "vm_name"
-      prompt: "Enter the desired name of the instance"
-      private: no
   tasks:
-  - name: Create service catalog item request
+  - name: "Retire item"
     uri:
-      url: "https://{{ cf_address }}/api/service_catalogs/20000000000001/service_templates"
+      url: "https://{{ cf_address }}/api/services/200000000000{{ cat_item_number }}/"
       method: POST
       user: admin
       password: "{{ cf_password }}"
@@ -39,7 +36,4 @@
         Content-Type:  application/json
       body_format: json
       body:
-        action: order
-        resource: 
-          href: "https://{{ cf_address }}/api/service_templates/200000000000{{ cat_item_number }}"
-          option_1_vm_name: "{{ vm_name }}"
+        action: retire
