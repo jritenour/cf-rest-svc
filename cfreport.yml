@@ -28,4 +28,4 @@
       password: smartvm
       validate_certs: no
       return_content: yes
-      dest: /home/jritenour
+      dest: /home/jritenour/results.json
