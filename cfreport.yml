@@ -1,0 +1,31 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Create service catalog item request
+    uri:
+      url: "https://{{ cfserver }}/api/reports/{{ report id }}"
+      method: POST
+      user: admin
+      password: "{{ password }}"
+      validate_certs: no
+      headers:
+        Content-Type:  application/json
+      body_format: json
+      body:
+        action: run
+    register: api_out
+  - name: Debugging instance info
+    debug:
+      var: api_out.json.result_href
+
+
+
+  - name: Download report output
+    uri:
+      url: "{{ api_out.json.result_href }}"
+      method: GET
+      user: admin
+      password: smartvm
+      validate_certs: no
+      return_content: yes
+      dest: /home/jritenour
