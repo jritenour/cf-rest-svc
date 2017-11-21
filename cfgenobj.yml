@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+
+  tasks:
+  - name: Create service catalog item request
+    uri:
+      url: "https://192.168.2.46/api/generic_objects"
+      method: POST
+      user: admin
+      password: "{{ password }}"
+      validate_certs: no
+      headers:
+        Content-Type:  application/json
+      body_format: json
+      body:
+        action: create
+        name: "API Test with associations"
+        generic_object_definition: 
+          href: "https://192.168.2.46/api/generic_object_definitions/12000000000001"
+        property_attributes:
+          db_type: MySQL
+          instance_type: db.m1.small
+        service: 
+           id: "12000000000005"
