@@ -3,11 +3,11 @@
   tasks:
   - name: Get CF Catalog items
     uri:
-      url: "https://{{ cf_address }}/api/service_templates?expand=resources&attributes=name"
+      url: "https://jmr-cfme.ddns.net/api/service_templates?expand=resources&attributes=name"
       method: GET
       return_content: yes
       user: admin
-      password: "{{ cf_password }}"
+      password: "lumieretunabutt"
       validate_certs: no
       body_format: json
       headers:

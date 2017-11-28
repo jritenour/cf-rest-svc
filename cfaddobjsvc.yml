@@ -3,7 +3,7 @@
   tasks:
   - name: Create service catalog item request
     uri:
-      url: "https://192.168.2.46/api/services/12000000000007"
+      url: "https://192.168.2.45/api/services/46000000000004"
       method: POST
       user: admin
       password: "{{ password }}"
@@ -15,4 +15,4 @@
         action: add_resource
         resource:
           resource:
-            href: "https://192.168.2.46/api/generic_objects/12000000000006"
+            href: "https://192.168.2.45/api/generic_objects/46000000000001"
