@@ -4,7 +4,7 @@
   tasks:
   - name: Create service catalog item request
     uri:
-      url: "https://192.168.2.46/api/generic_objects"
+      url: "https://192.168.2.45/api/generic_objects"
       method: POST
       user: admin
       password: "{{ password }}"
@@ -16,9 +16,10 @@
         action: create
         name: "API Test with associations"
         generic_object_definition: 
-          href: "https://192.168.2.46/api/generic_object_definitions/12000000000001"
+          href: "https://192.168.2.45/api/generic_object_definitions/46000000000001"
         property_attributes:
-          db_type: MySQL
-          instance_type: db.m1.small
-        service: 
-           id: "12000000000005"
+          engine: MySQL
+          type: db.m1.small
+        associations: 
+          provider: 
+          - href: https://192.168.2.45/api/providers/46000000000008
