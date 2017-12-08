@@ -1,0 +1,100 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Get Wordpress VM
+    uri:
+      url: "https://localhost/api/vms"
+      method: GET
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+    register: vms
+
+  - name: create new RDS DB instance 
+    rds:
+      command: create
+      instance_name: "{{ db_name }}"
+      db_engine: "{{ engine }}"
+      size: "{{ size }}"
+      instance_type: "{{ type }}"
+      username: "{{ user }}"
+      region: "{{ region }}"
+      password: "{{ password }}"
+
+  - name: Get services
+    uri:
+      url: "https://localhost/api/services"
+      method: GET
+      return_content: yes
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      body_format: json
+      headers:
+        Content-Type: "application/json"
+    register: service
+
+  - name: Create CloudForms Generic object instance
+    uri:
+      url: "https://localhost/api/generic_objects"
+      method: POST
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      headers:
+        Content-Type:  application/json
+      body_format: json
+      body:
+        action: create
+        name: "{{ obj_name }}" 
+        generic_object_definition:
+          href: https://localhost/api/generic_object_definitions/"{{ definition }}"
+        property_attributes:
+          engine: "{{ engine }}"
+          type: "{{ type }}"
+          region: "{{ region }}"
+          username: "{{ user }}"
+          size: "{{ size }}"
+          name: "{{ db_name }}"
+        associations:
+          provider:
+          - href: https://localhost/api/providers/"{{ provider }}"
+          service:
+          - href: "{{ service.json.resources|last|json_query('href') }}"
+    register: genobject
+
+  - name: add VM to service
+    uri:
+      url: "{{ service.json.resources|last|json_query('href') }}"
+      method: POST
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      headers:
+        Content-Type:  application/json
+      body_format: json
+      body:
+        action: add_resource
+        resource:
+          resource:
+            href: https://192.168.2.46/api/vms/46000000000013
+
+  - name: add generic object to service
+    uri:
+      url: "{{ service.json.resources|last|json_query('href') }}"
+      method: POST
+      user: admin
+      password: "{{ cf_password }}"
+      validate_certs: no
+      headers:
+        Content-Type:  application/json
+      body_format: json
+      body:
+        action: add_resource
+        resource:
+          resource:
+            href: "genobject.json.results|last|json_query('href')"

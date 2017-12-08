@@ -14,7 +14,7 @@
       body_format: json
       body:
         action: create
-        name: "API Test with associations"
+        name: "{{ name }}"
         generic_object_definition: 
           href: "https://192.168.2.45/api/generic_object_definitions/46000000000001"
         property_attributes:
@@ -23,3 +23,5 @@
         associations: 
           provider: 
           - href: https://192.168.2.45/api/providers/46000000000008
+          service: 
+          - href: https://192.168.2.45/api/services/46000000000004
