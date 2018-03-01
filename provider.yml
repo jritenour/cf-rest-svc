@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+  - name: Add Overcloud as provider
+    uri:
+      url: "https://192.168.2.46/api/providers"
+      method: POST
+      user: admin
+      password: "{{ cf_pass }}"
+      validate_certs: no
+      headers:
+        Content-Type:  application/json
+      body_format: json
+      body:
+        type: "ManageIQ::Providers::Redhat::InfraManager"
+        name:  RHV
+        hostname: 192.168.2.5
+        ipaddress: 192.168.2.5
+        zone:  
+          href: "https://192.168.2.46/api/zone/10000000000002"
+        credentials:
+          userid: admin@internal
+          password: "{{ rhv_pass }}"
