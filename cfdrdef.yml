@@ -2,9 +2,9 @@
 - hosts: localhost
 
   tasks:
-  - name: Create service catalog item request
+  - name: Create Dynamic Resource Object definition
     uri:
-      url: "https://192.168.2.46/api/generic_objects/46000000000017"
+      url: "https://{{ cf_server }}/api/generic_object_definitions"
       method: POST
       user: admin
       password: "{{ password }}"
@@ -13,4 +13,8 @@
         Content-Type:  application/json
       body_format: json
       body:
-        action: delete
+        action: create
+        name: "{{ name }}"
+        properties:
+          attributes:
+            haproxy_port: "{{ haproxy_port }}"
