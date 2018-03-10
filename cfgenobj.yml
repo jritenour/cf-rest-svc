@@ -4,7 +4,7 @@
   tasks:
   - name: Create service catalog item request
     uri:
-      url: "https://192.168.2.45/api/generic_objects"
+      url: "https://192.168.2.46/api/generic_objects"
       method: POST
       user: admin
       password: "{{ password }}"
@@ -16,12 +16,10 @@
         action: create
         name: "{{ name }}"
         generic_object_definition: 
-          href: "https://192.168.2.45/api/generic_object_definitions/46000000000001"
+          href: "https://192.168.2.46/api/generic_object_definitions/1"
         property_attributes:
-          engine: MySQL
-          type: db.m1.small
-        associations: 
-          provider: 
-          - href: https://192.168.2.45/api/providers/46000000000008
-          service: 
-          - href: https://192.168.2.45/api/services/46000000000004
+          haproxy_port: 80
+        associations:
+          vm: 
+           - href: "https://192.168.2.46/api/vms/18"
+           - href: "https://192.168.2.46/api/vms/17"
